@@ -8,11 +8,21 @@ const options = {
 }
 
 async function fetchFromTMDB(endpoint: string) {
-  const response = await fetch(
-    `${BASE_URL}${endpoint}?api_key=${API_KEY}`
-  );
+  const separator = endpoint.includes("?") ? "&" : "?";
+
+  const url = `${BASE_URL}${endpoint}${separator}api_key=${API_KEY}`;
+
+  console.log("Fetching:", url);
+
+  const response = await fetch(url);
 
   if (!response.ok) {
+    console.error("Status:", response.status);
+    console.error("Status Text:", response.statusText);
+
+    const error = await response.text();
+    console.error(error);
+
     throw new Error("Failed to fetch data");
   }
 
@@ -20,15 +30,31 @@ async function fetchFromTMDB(endpoint: string) {
 }
 
 export async function getTrending() {
-  return fetchFromTMDB("/trending/movie/day");
+  const response = await fetch(
+    `${BASE_URL}/trending/movie/day?api_key=${API_KEY}`
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch trending movies");
+  }
+
+  return response.json();
 }
 
 export async function getPopular() {
-  return fetchFromTMDB("/movie/popular");
+  const response = await fetch(
+    `${BASE_URL}/movie/popular?api_key=${API_KEY}`
+  );
+
+  return response.json();
 }
 
 export async function getTopRated() {
-  return fetchFromTMDB("/movie/top_rated");
+  const response = await fetch(
+    `${BASE_URL}/movie/top_rated?api_key=${API_KEY}`
+  );
+
+  return response.json();
 }
 
 export async function getMovie(id: number) {
@@ -41,8 +67,10 @@ export async function getSearch(query: string) {
   );
 }
 
-export async function getGenres() {
-  return fetchFromTMDB("/genre/movie/list");
+export async function getGenres(genreId: number) {
+   return fetchFromTMDB(
+    `/discover/movie?with_genres=${genreId}`
+  );
 }
 
 export async function getSimilar(id: number) {
