@@ -2,10 +2,11 @@ const BASE_URL = process.env.TMDB_BASE_URL;
 const API_KEY = process.env.TMDB_API_KEY;
 
 const options = {
-    header: {
-        Authorization: `Bearer ${process.env.TMDB_API_READ_ACCESS_TOKEN}`,
-    }
-}
+  headers: {
+    Authorization: `Bearer ${process.env.TMDB_API_READ_ACCESS_TOKEN}`,
+    accept: "application/json",
+  },
+};
 
 async function fetchFromTMDB(endpoint: string) {
   const separator = endpoint.includes("?") ? "&" : "?";

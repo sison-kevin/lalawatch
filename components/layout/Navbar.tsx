@@ -27,9 +27,9 @@ export default function Navbar() {
 
                 {/* Right Side */}
                 <div className="flex items-center gap-5">
-                    <button className="hover:text-purple-400">
+                    <Link href="/search" className="hover:text-purple-400">
                         <Search size={22} />
-                    </button>
+                    </Link>
 
                     <button className="rounded-lg bg-purple-400 px-4 py-2 text-white hover:bg-purple-500">
                         Log In

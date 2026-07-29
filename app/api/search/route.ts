@@ -3,18 +3,23 @@ import { getSearch } from "@/lib/tmdb";
 
 export async function GET(request: NextRequest) {
 
-  const searchParams = request.nextUrl.searchParams;
+    const searchParams = request.nextUrl.searchParams;
 
-  const query = searchParams.get("query");
+    const query = searchParams.get("query");
 
-  const page = Number(searchParams.get("page") ?? 1);
+    const page = Number(
+        searchParams.get("page") ?? 1
+    );
 
-  if (!query) {
-    return NextResponse.json([]);
-  }
+    if (!query) {
+        return NextResponse.json({
+            results: [],
+            total_pages: 1,
+        });
+    }
 
-  const data = await getSearch(query, page);
+    const data = await getSearch(query, page);
 
-  return NextResponse.json(data);
+    return NextResponse.json(data);
 
 }
