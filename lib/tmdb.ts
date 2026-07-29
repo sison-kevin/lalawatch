@@ -61,9 +61,12 @@ export async function getMovie(id: number) {
   return fetchFromTMDB(`/movie/${id}`);
 }
 
-export async function getSearch(query: string) {
+export async function getSearch(
+  query: string,
+  page = 1
+) {
   return fetchFromTMDB(
-    `/search/movie&query=${encodeURIComponent(query)}`
+    `/search/movie?query=${encodeURIComponent(query)}&page=${page}`
   );
 }
 
@@ -80,3 +83,4 @@ export async function getSimilar(id: number) {
 export async function getVideos(id: number) {
   return fetchFromTMDB(`/movie/${id}/videos`);
 }
+
