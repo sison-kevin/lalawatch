@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Star } from "lucide-react";
 
 type Movie = {
@@ -24,7 +25,15 @@ export default function MovieCard({ movie }: MovieCardProps) {
     "N/A";
   
   const type = movie.title ? "Movie" : "TV Show";
+  const isMovie = !!movie.title;
   return (
+    <Link
+      href={
+        isMovie
+          ? `/movies/${movie.id}`
+          : `/tv/${movie.id}`
+      }
+    >
     <div className="group min-w-[400px] cursor-pointer">
 
       {/* Image */}
@@ -64,5 +73,6 @@ export default function MovieCard({ movie }: MovieCardProps) {
         </div>
       </div>
     </div>
+    </Link>
   );
 }

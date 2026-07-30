@@ -96,3 +96,15 @@ export async function getPopularTV() {
 export async function getTopRatedTV() {
   return fetchFromTMDB("/tv/top_rated");
 }
+
+export async function getMovieDetails(id: number) {
+  return fetchFromTMDB(
+    `/movie/${id}?append_to_response=credits,similar,videos`
+  );
+}
+
+export async function getTVShow(id: number) {
+  return fetchFromTMDB(
+    `/tv/${id}?append_to_response=credits,videos,similar`
+  );
+}
