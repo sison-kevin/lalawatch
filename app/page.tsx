@@ -6,22 +6,31 @@ import {
   getPopular,
   getTopRated,
   getGenres,
+  getTrendingTV,
+  getPopularTV,
+  getTopRatedTV,
 } from "@/lib/tmdb";
 
 export default async function HomePage() {
 
   const [
     trending,
+    trendingTV,
     popular,
+    popularTV,
     topRated,
+    topRatedTV,
     action,
     comedy,
     drama,
     animation,
   ] = await Promise.all([
     getTrending(),
+    getTrendingTV(),
     getPopular(),
+    getPopularTV(),
     getTopRated(),
+    getTopRatedTV(),
     getGenres(28), // Action
     getGenres(35), // Comedy
     getGenres(18), // Drama
@@ -46,13 +55,28 @@ export default async function HomePage() {
         />
 
         <MovieRow
+          title=" Trending TV Shows Today"
+          movies={trendingTV.results}
+        />
+
+        <MovieRow
           title=" Popular"
           movies={popular.results}
         />
 
         <MovieRow
+          title=" Popular TV Shows"
+          movies={popularTV.results}
+        />
+
+        <MovieRow
           title=" Top Rated"
           movies={topRated.results}
+        />
+
+        <MovieRow
+          title=" Top Rated TV Shows"
+          movies={topRatedTV.results}
         />
 
         <MovieRow

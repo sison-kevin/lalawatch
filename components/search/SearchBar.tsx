@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import MovieCard from "@/components/movie/MovieCard";
+import SearchMovieCard from "../movie/SearchMovieCard";
 
 export default function SearchBar() {
   const [query, setQuery] = useState("");
@@ -35,28 +36,37 @@ export default function SearchBar() {
     }
 
     async function searchMovies() {
-      try {
-        setLoading(true);
+    try {
+      setLoading(true);
 
-        const response = await fetch(
-          `/api/search?query=${encodeURIComponent(
-            debouncedQuery
-          )}&page=${page}`
-        );
+      const response = await fetch(
+        `/api/search?query=${encodeURIComponent(
+          debouncedQuery
+        )}&page=${page}`
+      );
 
-        const data = await response.json();
+      const data = await response.json();
 
-        console.log(data);
+      console.log(data);
 
-        setMovies(data.results || []);
-        setTotalPages(data.total_pages || 1);
-      } catch (error) {
-        console.error(error);
-        setMovies([]);
-      } finally {
-        setLoading(false);
-      }
+      // Keep only Movies and TV Shows
+      const filteredResults = (data.results || []).filter(
+        (item: any) =>
+          (item.media_type === "movie" ||
+            item.media_type === "tv") &&
+          (item.poster_path || item.backdrop_path)
+      );
+
+      setMovies(filteredResults);
+      setTotalPages(data.total_pages || 1);
+
+    } catch (error) {
+      console.error(error);
+      setMovies([]);
+    } finally {
+      setLoading(false);
     }
+  }
 
     searchMovies();
   }, [debouncedQuery, page]);
@@ -84,10 +94,11 @@ export default function SearchBar() {
           </p>
         ) : (
           <div className="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-5">
-            {movies.map((movie: any) => (
-              <MovieCard
-                key={movie.id}
-                movie={movie}
+            {movies.map((movie: any, index: number) => (
+              <SearchMovieCard
+                  key={movie.id}
+                  movie={movie}
+                  index={index}
               />
             ))}
           </div>

@@ -67,7 +67,7 @@ export async function getSearch(
   page = 1
 ) {
   return fetchFromTMDB(
-    `/search/movie?query=${encodeURIComponent(query)}&page=${page}`
+    `/search/multi?query=${encodeURIComponent(query)}&page=${page}`
   );
 }
 
@@ -85,3 +85,14 @@ export async function getVideos(id: number) {
   return fetchFromTMDB(`/movie/${id}/videos`);
 }
 
+export async function getTrendingTV() {
+  return fetchFromTMDB("/trending/tv/day");
+}
+
+export async function getPopularTV() {
+  return fetchFromTMDB("/tv/popular");
+}
+
+export async function getTopRatedTV() {
+  return fetchFromTMDB("/tv/top_rated");
+}

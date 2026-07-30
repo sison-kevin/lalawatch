@@ -17,12 +17,13 @@ type MovieCardProps = {
 
 export default function MovieCard({ movie }: MovieCardProps) {
   const title = movie.title || movie.name || "Untitled";
-
+  
   const year =
     movie.release_date?.split("-")[0] ||
     movie.first_air_date?.split("-")[0] ||
     "N/A";
-
+  
+  const type = movie.title ? "Movie" : "TV Show";
   return (
     <div className="group min-w-[400px] cursor-pointer">
 
@@ -58,7 +59,8 @@ export default function MovieCard({ movie }: MovieCardProps) {
 
           <span>•</span>
 
-          <span>{movie.title ? "Movie" : "Series"}</span>
+          <span>{type}</span>
+          
         </div>
       </div>
     </div>
