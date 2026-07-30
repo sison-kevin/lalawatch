@@ -41,37 +41,37 @@ export default async function HomePage() {
       <div className="px-10 py-10">
 
         <MovieRow
-          title="🔥 Trending"
+          title=" Trending Today"
           movies={trending.results}
         />
 
         <MovieRow
-          title="⭐ Popular"
+          title=" Popular"
           movies={popular.results}
         />
 
         <MovieRow
-          title="🏆 Top Rated"
+          title=" Top Rated"
           movies={topRated.results}
         />
 
         <MovieRow
-          title="💥 Action"
+          title=" Action"
           movies={action.results}
         />
 
         <MovieRow
-          title="😂 Comedy"
+          title=" Comedy"
           movies={comedy.results}
         />
 
         <MovieRow
-          title="🎭 Drama"
+          title=" Drama"
           movies={drama.results}
         />
 
         <MovieRow
-          title="🎨 Animation"
+          title=" Animation"
           movies={animation.results}
         />
 
