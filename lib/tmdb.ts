@@ -15,19 +15,21 @@ async function fetchFromTMDB(endpoint: string) {
 
   console.log("Fetching:", url);
 
-  const response = await fetch(url);
+  try {
+    const response = await fetch(url);
 
-  if (!response.ok) {
-    console.error("Status:", response.status);
-    console.error("Status Text:", response.statusText);
+    if (!response.ok) {
+      const error = await response.text();
+      console.error(error);
+      throw new Error(`TMDB Error ${response.status}`);
+    }
 
-    const error = await response.text();
-    console.error(error);
+    return response.json();
 
-    throw new Error("Failed to fetch data");
+  } catch (error) {
+    console.error("FETCH FAILED:", error);
+    throw error;
   }
-
-  return response.json();
 }
 
 export async function getTrending() {
@@ -107,4 +109,8 @@ export async function getTVShow(id: number) {
   return fetchFromTMDB(
     `/tv/${id}?append_to_response=credits,videos,similar`
   );
+}
+
+export async function getMovieVideos(id: number) {
+  return fetchFromTMDB(`/movie/${id}/videos`);
 }
