@@ -83,10 +83,6 @@ export async function getSimilar(id: number) {
   return fetchFromTMDB(`/movie/${id}/similar`);
 }
 
-export async function getVideos(id: number) {
-  return fetchFromTMDB(`/movie/${id}/videos`);
-}
-
 export async function getTrendingTV() {
   return fetchFromTMDB("/trending/tv/day");
 }
@@ -111,6 +107,58 @@ export async function getTVShow(id: number) {
   );
 }
 
-export async function getMovieVideos(id: number) {
-  return fetchFromTMDB(`/movie/${id}/videos`);
+
+
+export async function getVideos(
+  id: number,
+  type: "movie" | "tv"
+) {
+  const res = await fetch(
+    `${BASE_URL}/${type}/${id}/videos?api_key=${process.env.TMDB_API_KEY}&language=en-US`,
+    {
+      next: {
+        revalidate: 3600,
+      },
+    }
+  );
+
+  if (!res.ok) {
+    console.error(
+      `Failed to fetch ${type} videos for ${id}: ${res.status}`
+    );
+
+    return {
+      results: [],
+    };
+  }
+
+  return res.json();
+}
+
+export async function getMovieVideos(movieId: number) {
+  const res = await fetch(
+    `${BASE_URL}/movie/${movieId}/videos?api_key=${API_KEY}`,
+    {
+      next: {
+        revalidate: 3600,
+      },
+    }
+  );
+
+ if (!res.ok) {
+  if (res.status === 404) {
+    // Movie has no video information
+    return {
+      results: [],
+    };
+  }
+
+  console.error(
+    `Failed to fetch movie videos for ${movieId}: ${res.status}`
+  );
+
+  throw new Error(`Failed to fetch movie videos: ${res.status}`);
+}
+
+  return res.json();
 }

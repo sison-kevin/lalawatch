@@ -64,51 +64,61 @@ console.log(videos);
         <MovieRow
           title="Trending Today"
           movies={trending.results}
+          type="movie"
         />
 
         <MovieRow
           title="Trending TV Shows Today"
           movies={trendingTV.results}
+          type="tv"
         />
 
         <MovieRow
           title="Popular"
           movies={popular.results}
+          type="movie"
         />
 
         <MovieRow
           title="Popular TV Shows"
           movies={popularTV.results}
+          type="tv"
         />
 
         <MovieRow
           title="Top Rated"
           movies={topRated.results}
+          type="movie"
         />
 
         <MovieRow
           title="Top Rated TV Shows"
           movies={topRatedTV.results}
+          type="tv"
         />
 
         <MovieRow
           title="Action"
           movies={action.results}
+          type="movie"
         />
 
         <MovieRow
           title="Comedy"
           movies={comedy.results}
+          type="movie"
         />
 
         <MovieRow
           title="Drama"
           movies={drama.results}
+          type="movie"
         />
 
         <MovieRow
           title="Animation"
           movies={animation.results}
+          type="movie"
         />
 
       </div>

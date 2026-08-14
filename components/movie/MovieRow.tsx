@@ -1,91 +1,92 @@
-"use client";
-
-import { useRef } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import MovieCard from "./MovieCard";
-
-type Movie = {
-  id: number;
-  title?: string;
-  name?: string;
-  backdrop_path: string;
-  vote_average: number;
-  release_date?: string;
-  first_air_date?: string;
-};
+import { getVideos } from "@/lib/tmdb";
 
 type MovieRowProps = {
   title: string;
-  movies: Movie[];
+  movies: any[];
+  type?: "movie" | "tv";
 };
 
-export default function MovieRow({
+export default async function MovieRow({
   title,
   movies,
+  type = "movie",
 }: MovieRowProps) {
-  const rowRef = useRef<HTMLDivElement>(null);
 
-  const scroll = (direction: "left" | "right") => {
-    if (!rowRef.current) return;
+  const moviesWithVideos = await Promise.all(
+    movies.map(async (movie) => {
 
-    const amount = 420;
+      try {
+        const videos = await getVideos(
+          movie.id,
+          type
+        );
 
-    rowRef.current.scrollBy({
-      left: direction === "left" ? -amount : amount,
-      behavior: "smooth",
-    });
-  };
+        const trailer =
+          videos.results?.find(
+            (video: any) =>
+              video.site === "YouTube" &&
+              video.type === "Trailer" &&
+              video.key
+          ) ||
+          videos.results?.find(
+            (video: any) =>
+              video.site === "YouTube" &&
+              video.type === "Teaser" &&
+              video.key
+          ) ||
+          videos.results?.find(
+            (video: any) =>
+              video.site === "YouTube" &&
+              video.type === "Clip" &&
+              video.key
+          ) ||
+          videos.results?.find(
+            (video: any) =>
+              video.site === "YouTube" &&
+              video.type === "Featurette" &&
+              video.key
+          );
+
+        return {
+          ...movie,
+          trailerKey: trailer?.key || null,
+        };
+
+      } catch (error) {
+
+        console.error(
+          `Could not get videos for ${type} ${movie.id}`,
+          error
+        );
+
+        return {
+          ...movie,
+          trailerKey: null,
+        };
+      }
+    })
+  );
 
   return (
-    <section className="mb-14">
+    <section className="mb-12">
 
-      {/* Header */}
-      <div className="mb-6 flex items-center justify-between">
+      <h2 className="mb-5 text-2xl font-bold text-white">
+        {title}
+      </h2>
 
-        <div className="flex items-center gap-4">
+      <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
 
-          <div className="h-7 w-1 rounded-full bg-red-500" />
-
-          <h2 className="text-4xl font-bold text-white">
-            {title}
-          </h2>
-
-        </div>
-      </div>
-
-      {/* Row */}
-      <div className="relative">
-
-        {/* Left Arrow */}
-        <button
-          onClick={() => scroll("left")}
-          className="absolute left-2 top-[90px] z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition hover:bg-black/80"
-        >
-          <ChevronLeft size={32} />
-        </button>
-
-        {/* Movies */}
-        <div
-          ref={rowRef}
-          className="flex gap-6 overflow-x-auto scroll-smooth pb-4 scrollbar-hide"
-        >
-          {movies.map((movie) => (
-            <MovieCard
-              key={movie.id}
-              movie={movie}
-            />
-          ))}
-        </div>
-
-        {/* Right Arrow */}
-        <button
-          onClick={() => scroll("right")}
-          className="absolute right-2 top-[90px] z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-white backdrop-blur-sm transition hover:bg-black/80"
-        >
-          <ChevronRight size={32} />
-        </button>
+        {moviesWithVideos.map((movie) => (
+          <MovieCard
+            key={movie.id}
+            movie={movie}
+            trailerKey={movie.trailerKey}
+          />
+        ))}
 
       </div>
+
     </section>
   );
 }
