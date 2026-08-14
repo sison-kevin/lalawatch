@@ -1,8 +1,8 @@
 "use client";
 
+import { Volume2, VolumeX, Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type Movie = {
@@ -27,6 +27,7 @@ export default function MovieCard({
 }: MovieCardProps) {
   const [hovered, setHovered] = useState(false);
   const [showTrailer, setShowTrailer] = useState(false);
+  const [muted, setMuted] = useState(true);
 
   const title = movie.title || movie.name || "Untitled";
 
@@ -43,9 +44,11 @@ export default function MovieCard({
     if (hovered && trailerKey) {
       timer = setTimeout(() => {
         setShowTrailer(true);
+        setMuted(true);
       }, 5000);
     } else {
       setShowTrailer(false);
+      setMuted(true);
     }
 
     return () => {
@@ -67,6 +70,7 @@ export default function MovieCard({
         onMouseLeave={() => {
           setHovered(false);
           setShowTrailer(false);
+          setMuted(true);
         }}
       >
         {/* VIDEO / IMAGE */}
@@ -86,8 +90,11 @@ export default function MovieCard({
           {/* YOUTUBE TRAILER */}
           {showTrailer && trailerKey && (
             <iframe
-              className="absolute inset-0 h-full w-full scale-[1.25] pointer-events-none"
-              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailerKey}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+              key={`${trailerKey}-${muted}`}
+              className="pointer-events-none absolute inset-0 h-full w-full scale-[1.25]"
+              src={`https://www.youtube.com/embed/${trailerKey}?autoplay=1&mute=${
+                muted ? 1 : 0
+              }&controls=0&loop=1&playlist=${trailerKey}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
               allow="autoplay; encrypted-media"
               title={`${title} trailer`}
             />
@@ -95,6 +102,27 @@ export default function MovieCard({
 
           {/* OVERLAY */}
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+
+          {/* CUSTOM MUTE BUTTON */}
+          {showTrailer && trailerKey && (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                setMuted((current) => !current);
+              }}
+              className="absolute bottom-4 right-4 z-30 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-black/70 text-white backdrop-blur-md transition-all duration-200 hover:scale-110 hover:bg-black/90"
+              aria-label={muted ? "Unmute trailer" : "Mute trailer"}
+            >
+              {muted ? (
+                <VolumeX size={19} />
+              ) : (
+                <Volume2 size={19} />
+              )}
+            </button>
+          )}
         </div>
 
         {/* INFO */}
