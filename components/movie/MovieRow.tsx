@@ -1,5 +1,6 @@
 import MovieCard from "./MovieCard";
 import { getVideos } from "@/lib/tmdb";
+import MovieRowScroller from "./MovieRowScroller";
 
 type MovieRowProps = {
   title: string;
@@ -75,8 +76,7 @@ export default async function MovieRow({
         {title}
       </h2>
 
-      <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-
+      <MovieRowScroller>
         {moviesWithVideos.map((movie) => (
           <MovieCard
             key={movie.id}
@@ -84,8 +84,7 @@ export default async function MovieRow({
             trailerKey={movie.trailerKey}
           />
         ))}
-
-      </div>
+      </MovieRowScroller>
 
     </section>
   );
