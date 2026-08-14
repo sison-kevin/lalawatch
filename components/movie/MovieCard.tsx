@@ -45,7 +45,7 @@ export default function MovieCard({
       timer = setTimeout(() => {
         setShowTrailer(true);
         setMuted(true);
-      }, 5000);
+      }, 3000);
     } else {
       setShowTrailer(false);
       setMuted(true);
