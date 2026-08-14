@@ -65,7 +65,11 @@ export default function MovieCard({
       }
     >
       <div
-        className="group min-w-[400px] cursor-pointer"
+        className="group min-w-[400px] cursor-pointer
+          transition-all duration-300 ease-out
+          hover:scale-[1.04]
+          hover:z-20
+          hover:shadow-2xl"
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => {
           setHovered(false);
